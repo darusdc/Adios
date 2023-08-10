@@ -26,7 +26,7 @@ const ProfileScreen = () => {
 
   const getProfile = () =>{
     const data = realm.objects("User").filtered(`id== ${userLoginId}`)[0]
-    console.log(data)
+    // console.log(data)
     setProfile(data)
   }
 

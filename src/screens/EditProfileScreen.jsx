@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -8,9 +8,36 @@ import Colors from '../constants/Colors';
 import { Icon } from '@rneui/themed';
 import { Modalize } from 'react-native-modalize';
 import { Header } from '../components/Header/Header';
+import realm from '../store/realm';
+import { useDispatch, useSelector } from 'react-redux'
+import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfileScreen = () => {
+    const userLoginId = useSelector((store)=> store.userLoginIdReducer.userLoginId)
+    const [userProfile, setUserProfile] = useState({name:"", email:"", phone:""})
+    const getUserData = () => {
+        const data = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
+        const { email, name, phone } = data
+        setUserProfile({email, name, phone})
+    }
     const editProfileRef = useRef(null)
+    const onClickCamera = () => {
+        ImagePicker.openPicker({
+            width: 400,
+            height: 400,
+            cropping: true
+        }).then((image) => {
+            setUserProfile({...userProfile,
+                profileImage: image.path
+            })
+            editProfileRef.current?.close()
+        }).catch((error) => {
+            console.log(error.message)
+        })
+    }
+    useEffect(() => {
+        getUserData()
+    } , [])
     return (
         <View style={styles.mainContainer}>
             <Header
@@ -19,12 +46,9 @@ const EditProfileScreen = () => {
                 isStackScreen
             />
             <Formik
-                initialValues={{
-                    name: '',
-                    email: '',
-                    phone: '',
-                    profileImage: '',
-                }}
+                initialValues={userProfile}
+                enableReinitialize
+                onSubmit={(data)=>{console.log(data)}}
             >
                 {({
                     handleChange,
@@ -38,7 +62,7 @@ const EditProfileScreen = () => {
                         <View style={styles.profileImageContainer}>
                             <Image
                                 style={styles.profileImage}
-                                source={{ uri: 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png' }}
+                                source={{ uri: userProfile.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png' }}
                             />
                             <TouchableOpacity
                                 onPress = {()=>{
@@ -59,6 +83,7 @@ const EditProfileScreen = () => {
                                 onChangeText={handleChange('name')}
                                 onBlur={handleBlur('name')}
                                 placeholder='your name'
+                                value={values?.name}
                                 style={styles.innerInput}
                                 placeholderTextColor={Colors.GRAY}
                             />
@@ -78,6 +103,7 @@ const EditProfileScreen = () => {
                                 onChangeText={handleChange('email')}
                                 onBlur={handleBlur('email')}
                                 placeholder='your email'
+                                value={values?.email}
                                 style={styles.innerInput}
                                 placeholderTextColor={Colors.GRAY}
                             />
@@ -98,6 +124,7 @@ const EditProfileScreen = () => {
                                 onChangeText={handleChange('phone')}
                                 onBlur={handleBlur('phone')}
                                 placeholder='your phone'
+                                value={values?.phone}
                                 style={styles.innerInput}
                                 placeholderTextColor={Colors.GRAY}
                             />
@@ -138,6 +165,7 @@ const EditProfileScreen = () => {
                             type='antdesign'
                             textToShow="Take from Gallery"
                             buttonCustomStyle={styles.buttonStyle}
+                            onPress = {onClickCamera}
                         />
                     </View>
                 </View>
