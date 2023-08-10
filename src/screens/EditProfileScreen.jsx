@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Formik } from 'formik';
-import * as yup from 'yup';
 import { CustomButton } from '../components/Button';
 import { MediumText, SmallText } from '../components/Text';
 import Colors from '../constants/Colors';
@@ -9,19 +8,19 @@ import { Icon } from '@rneui/themed';
 import { Modalize } from 'react-native-modalize';
 import { Header } from '../components/Header/Header';
 import realm from '../store/realm';
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfileScreen = () => {
     const userLoginId = useSelector((store)=> store.userLoginIdReducer.userLoginId)
-    const [userProfile, setUserProfile] = useState({name:"", email:"", phone:""})
+    const [userProfile, setUserProfile] = useState({})
     const getUserData = () => {
         const data = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
-        const { email, name, phone } = data
-        setUserProfile({email, name, phone})
+        const {name, email, phone, profileImage} = data
+        setUserProfile({name, email, phone, profileImage})
     }
     const editProfileRef = useRef(null)
-    const onClickCamera = () => {
+    const onGalleryClick = () => {
         ImagePicker.openPicker({
             width: 400,
             height: 400,
@@ -33,6 +32,38 @@ const EditProfileScreen = () => {
             editProfileRef.current?.close()
         }).catch((error) => {
             console.log(error.message)
+        })
+    }
+
+    const onCameraClick = () => {
+        ImagePicker.openCamera({
+            width: 400,
+            height: 400,
+            cropping: true
+        }).then((image) => {
+            setUserProfile({...userProfile,
+                profileImage: image.path
+            })
+            editProfileRef.current?.close()
+        }).catch((error) => {
+            console.log(error.message)
+        })
+    }
+
+    const onInputChange = (key, value) => {
+        setUserProfile({
+        ...userProfile,
+        [key]: value,
+        });
+        };
+
+    const onSubmit = (data) => {
+        const dataToUpdate = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
+        realm.write(() => {
+            dataToUpdate.name = data.name,
+            dataToUpdate.email = data.email,
+            dataToUpdate.phone = data.phone,
+            dataToUpdate.profileImage = userProfile.profileImage || ""
         })
     }
     useEffect(() => {
@@ -48,7 +79,7 @@ const EditProfileScreen = () => {
             <Formik
                 initialValues={userProfile}
                 enableReinitialize
-                onSubmit={(data)=>{console.log(data)}}
+                onSubmit={(data) => onSubmit(data)}
             >
                 {({
                     handleChange,
@@ -62,7 +93,7 @@ const EditProfileScreen = () => {
                         <View style={styles.profileImageContainer}>
                             <Image
                                 style={styles.profileImage}
-                                source={{ uri: userProfile.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png' }}
+                                source={{ uri: values?.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png' }}
                             />
                             <TouchableOpacity
                                 onPress = {()=>{
@@ -80,10 +111,10 @@ const EditProfileScreen = () => {
                         <View style={styles.input}>
                             <Icon name='person' type='ionicon'/>
                             <TextInput
-                                onChangeText={handleChange('name')}
+                                onChangeText={(text) => onInputChange('name',text)}
                                 onBlur={handleBlur('name')}
                                 placeholder='your name'
-                                value={values?.name}
+                                value={userProfile.name}
                                 style={styles.innerInput}
                                 placeholderTextColor={Colors.GRAY}
                             />
@@ -100,7 +131,7 @@ const EditProfileScreen = () => {
                         <View style={styles.input}>
                             <Icon name='email' type='material-community'/>
                             <TextInput
-                                onChangeText={handleChange('email')}
+                                 onChangeText={(text) => onInputChange('email',text)}
                                 onBlur={handleBlur('email')}
                                 placeholder='your email'
                                 value={values?.email}
@@ -121,7 +152,7 @@ const EditProfileScreen = () => {
                         <View style={styles.input}>
                             <Icon name='phone' type='material-community'/>
                             <TextInput
-                                onChangeText={handleChange('phone')}
+                                 onChangeText={(text) => onInputChange('phone',text)}
                                 onBlur={handleBlur('phone')}
                                 placeholder='your phone'
                                 value={values?.phone}
@@ -156,6 +187,7 @@ const EditProfileScreen = () => {
                             type='material-community'
                             textToShow="Take a Picture"
                             buttonCustomStyle={styles.buttonStyle}
+                            onPress = {onCameraClick}
                         />
                     </View>
                     <View style={styles.editProfileButtonContainer}>
@@ -165,7 +197,7 @@ const EditProfileScreen = () => {
                             type='antdesign'
                             textToShow="Take from Gallery"
                             buttonCustomStyle={styles.buttonStyle}
-                            onPress = {onClickCamera}
+                            onPress = {onGalleryClick}
                         />
                     </View>
                 </View>

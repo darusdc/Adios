@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Header } from '../components/Header/Header'
 import { Image } from '@rneui/base'
 import { MediumText, SmallText } from '../components/Text'
@@ -7,13 +7,13 @@ import { CustomButton } from '../components/Button'
 import { FeatureList } from '../components/FeatureList'
 import Colors from '../constants/Colors'
 import { useDispatch, useSelector } from 'react-redux'
-import { useState, useEffect} from 'react'
+import { useState } from 'react'
 import realm from '../store/realm'
 import { useRef } from 'react'
 import { Modalize } from 'react-native-modalize'
 import { Portal } from 'react-native-portalize/lib/Portal'
 import LottieView from 'lottie-react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { addUserLoginId } from '../store/redux/actions/userLoginIdAction'
 
 const ProfileScreen = () => {
@@ -45,9 +45,11 @@ const ProfileScreen = () => {
 
   }
 
-  useEffect(()=>{
-    getProfile()
-  },[])
+  useFocusEffect(
+    useCallback(() => {
+      getProfile()
+    },[])
+  )
   return (
     <View style={styles.mainContainer}>
       <Header
