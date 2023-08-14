@@ -30,20 +30,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginVertical: 0
     },
-    productItemContainer: {
-        borderWidth: 1,
-        borderColor: Colors.BORDER_COLOR,
-        width: itemWidth,
-        // flex: 1,
-        padding: 16,
-        margin: 8,
-        borderRadius: 5
-    },
-    productImage: {
-        width: itemWidth,
-        height: itemHeight,
-        resizeMode: 'contain'
-    }
 })
 
 export default styles

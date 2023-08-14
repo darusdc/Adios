@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, ImageBackground, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View,ImageBackground, FlatList, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SwiperFlatList } from 'react-native-swiper-flatlist'
 import { carouselData } from '../data/carouselDummyData'
@@ -15,41 +15,79 @@ import { LargeText, MediumText, SmallText } from '../components/Text'
 import Colors from '../constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Header } from '../components/Header/Header'
+import Product from '../components/Product'
+import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+import { generateId } from '../utils/generateId'
+import { FavoriteProduct } from '../store/realm/models/FavoriteProduct'
 
 
 const renderItem = ({item}) => (
     <View style={styles.container}>
         <ImageBackground
-        style={styles.imageBackgroundStyle}
-        source={{ uri: item.thumbnail }}
+          style={styles.imageBackgroundStyle}
+          source={{ uri: item.thumbnail }}
         >
         <LargeText textToShow={item.tagline} textCustomStyle={{color: Colors.WHITE, fontWeight: 'bold'}}/>
         </ImageBackground>
     </View>
 )
 
-const listRenderItem = ({item}) => (
-  <TouchableOpacity style={styles.productItemContainer}>
-    <Image
-    style={styles.productImage}
-    source={{uri: item.images[0].link}}
-    />
-    
-    <SmallText textToShow={item.name} textCustomStyle={{fontWeight: 'bold'}}/>
-    <SmallText textToShow={`$ ${item.price}`} textCustomStyle={{marginBottom: 0}}/>
-
-  </TouchableOpacity>
-
-)
-
 const HomeScreen = () => {
   const [products, setProduct] = useState([]);
+  const { userLoginId } = useSelector((store) => store.userLoginIdReducer)
+  const navigate = useNavigation()
   const collectData = () => {
     const productDB =  realm.objects('Product');
     const fiveProducts = productDB.slice(0,5);
     setProduct(fiveProducts);
     console.log('product amount: ', productDB.length);
   };
+
+  const listRenderItem = ({item}) => (
+    <Product
+       productName={item.name}
+       productPrice={item.price}
+       source={{uri:item.images[0].link}}
+       isLike = {item.isLike}
+       onPressHeart={() => onClickHeart(item.id, item.isLike)} />
+   )
+
+  const onClickHeart = (productId, currentLikeStatus) => {
+    if (userLoginId != 0)  {
+      const product = realm.objects('Product').filtered(`id == ${productId}`)[0]
+      realm.write(() => {
+        product.isLike = !currentLikeStatus
+      })
+      collectData()
+      const favoriteList = realm.objects('FavoriteProduct').filtered(`idUser == ${userLoginId}`)[0]
+      if (favoriteList) {
+        const isProductExist = favoriteList.idProducts.has(productId)
+
+        realm.write(() => {
+          if (isProductExist) {
+            favoriteList.idProducts.delete(productId)
+          } else {
+            favoriteList.idProducts.add(productId)
+          }
+        })
+
+      } else {
+        const newId = generateId('FavoriteProduct')
+
+        realm.write(() => {
+          realm.create('FavoriteProduct', {
+            id: newId,
+            idUser: userLoginId,
+            idProducts: [productId]
+          })
+        })
+      }
+      console.log(favoriteList.idProducts)
+    } else {
+      navigate.navigate('Login')
+    }
+  }
   useEffect(()=>{
     insertDummyData('Brand', brandData);
     insertDummyData('Gender', genderData);
