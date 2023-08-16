@@ -3,10 +3,10 @@ import { Icon } from '@rneui/base'
 import styles from './ProductStyle'
 import { SmallText } from './Text'
 export default Product =  (props) => {
-    const {productName, productPrice, onPressHeart, isLike} = props;
+    const {productName, productPrice, onPressHeart, isLike, onPress} = props;
 
     return (
-        <TouchableOpacity style={styles.productItemContainer}>
+        <TouchableOpacity style={styles.productItemContainer} onPress={onPress}>
             <TouchableOpacity style={styles.heartIconContainer}
                 onPress={onPressHeart}>
                 <Icon 

@@ -32,9 +32,13 @@ const ProfileScreen = () => {
 
   const onClickLogout = () => {
     const dataToRemove = realm.objects('UserLoginId');
+    const likedProduct = realm.objects('Product').filtered('isLike == true');
 
     realm.write(()=> {
       realm.delete(dataToRemove)
+      likedProduct.forEach((item) => {
+        item.isLike = false;
+      })
     })
 
     dispatch(addUserLoginId(0))

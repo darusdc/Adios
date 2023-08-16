@@ -83,7 +83,6 @@ const HomeScreen = () => {
           })
         })
       }
-      console.log(favoriteList.idProducts)
     } else {
       navigate.navigate('Login')
     }

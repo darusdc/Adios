@@ -17,6 +17,8 @@ import { useDispatch } from "react-redux";
 import realm from "../store/realm";
 import { Host } from "react-native-portalize/lib/Host";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import FavoriteProductScreen from "../screens/FavoriteProductScreen";
+import ProductDetailScreen from "../screens/ProductDetailScreen";
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -45,6 +47,25 @@ const TabScreenGroup = () => {
                         tabBarLabel: ({focused}) => (
                             <TinyText
                                 textToShow="Explore"
+                                textCustomStyle={{color: focused ? Colors.PRIMARY : Colors.GRAY}}
+                            />
+                        )
+                    }}
+                />
+                <Tab.Screen
+                    name="Favorite"
+                    component={FavoriteProductScreen}
+                    options={{
+                        tabBarIcon: ({focused}) =>(
+                            <Icon
+                                name="heart-circle-sharp"
+                                type="ionicon"
+                                color={focused ? Colors.PRIMARY : Colors.GRAY}
+                            />
+                        ),
+                        tabBarLabel: ({focused}) => (
+                            <TinyText
+                                textToShow="Favorite"
                                 textCustomStyle={{color: focused ? Colors.PRIMARY : Colors.GRAY}}
                             />
                         )
@@ -115,6 +136,7 @@ const MainNavigation = () => {
                 <Stack.Screen name="Register" component={RegisterScreen}/>
                 <Stack.Screen name="Cart" component={CartScreen}/>
                 <Stack.Screen name="Edit" component={EditProfileScreen}/>
+                <Stack.Screen name="ProductDetail" component={ProductDetailScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     )
