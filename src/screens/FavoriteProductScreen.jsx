@@ -31,7 +31,7 @@ const FavoriteProductScreen = () => {
             />
             <FlatList
                 data={favoriteProducts}
-                contentContainerStyle={{padding: 0}}
+                contentContainerStyle={{padding: 8}}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
                 renderItem={({ item }) => (
@@ -44,7 +44,6 @@ const FavoriteProductScreen = () => {
                     />
                 )}
             />
-            <Text>favo</Text>
         </View>
     )
 // here is return
@@ -54,6 +53,7 @@ export default FavoriteProductScreen
 
 const styles = StyleSheet.create({
     container: {
-        flex:1
+        flex:1,
+        resizeMode: "contain"
     }
 })

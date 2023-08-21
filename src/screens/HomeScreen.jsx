@@ -36,7 +36,7 @@ const renderItem = ({item}) => (
 const HomeScreen = () => {
   const [products, setProduct] = useState([]);
   const { userLoginId } = useSelector((store) => store.userLoginIdReducer)
-  const navigate = useNavigation()
+  const navigation = useNavigation()
   const collectData = () => {
     const productDB =  realm.objects('Product');
     const fiveProducts = productDB.slice(0,5);
@@ -50,7 +50,9 @@ const HomeScreen = () => {
        productPrice={item.price}
        source={{uri:item.images[0].link}}
        isLike = {item.isLike}
-       onPressHeart={() => onClickHeart(item.id, item.isLike)} />
+       onPressHeart={() => onClickHeart(item.id, item.isLike)}
+       onPress = {() => navigation.navigate('ProductDetail',{id: item.id})}
+    />
    )
 
   const onClickHeart = (productId, currentLikeStatus) => {
@@ -84,7 +86,7 @@ const HomeScreen = () => {
         })
       }
     } else {
-      navigate.navigate('Login')
+      navigation.navigate('Login')
     }
   }
   useEffect(()=>{

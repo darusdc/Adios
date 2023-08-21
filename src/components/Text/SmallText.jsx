@@ -12,7 +12,7 @@ const SmallText = (props) => {
 
 SmallText.propTypes = {
     textToShow : PropTypes.string,
-    textCustomStyle: PropTypes.object 
+    textCustomStyle: PropTypes.oneOfType([PropTypes.array, PropTypes.object]) 
 }
 
 export default SmallText

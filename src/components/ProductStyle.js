@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         productItemContainer: {
             borderWidth: 1,
             borderColor: Colors.BORDER_COLOR,
-            width: itemWidth,
+            width: itemWidth+5,
             flex: 1,
             padding: 16,
             margin: 8,
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
             zIndex:1
         },
         productImage: {
-            width: itemWidth-3,
+            width: itemWidth-5,
             height: itemHeight,
             resizeMode: 'contain',
             zIndex:0,

@@ -7,6 +7,7 @@ import { Shipping } from './models/Shipping';
 import { Product, ProductImage } from './models/Product';
 import { User, UserLoginId } from './models/User';
 import { FavoriteProduct } from './models/FavoriteProduct';
+import { Cart } from './models/Cart';
 
 const realm = new Realm({
     schema: [
@@ -19,7 +20,8 @@ const realm = new Realm({
         ProductImage,
         User,
         UserLoginId,
-        FavoriteProduct
+        FavoriteProduct,
+        Cart
     ],
 });
 
