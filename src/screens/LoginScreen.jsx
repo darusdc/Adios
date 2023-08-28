@@ -12,6 +12,9 @@ import { useNavigation } from '@react-navigation/native';
 import realm from '../store/realm';
 import { addUserLoginId } from '../store/redux/actions/userLoginIdAction';
 import { useDispatch } from 'react-redux';
+import { countProductCart } from '../utils/countProductCart';
+import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
+
 
 
 const formValidationSchema = yup.object().shape({
@@ -42,6 +45,8 @@ const LoginScreen = () => {
                 }
             })
             dispatch(addUserLoginId(userAccount.id))
+            const countResult = countProductCart(userAccount.id);
+            dispatch(addProductCartAmount(countResult));
             navigation.popToTop()
         }
     }

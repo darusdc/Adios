@@ -15,6 +15,7 @@ import { Portal } from 'react-native-portalize/lib/Portal'
 import LottieView from 'lottie-react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { addUserLoginId } from '../store/redux/actions/userLoginIdAction'
+import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction'
 
 const ProfileScreen = () => {
   const userLoginId = useSelector((store)=> store.userLoginIdReducer.userLoginId)
@@ -42,6 +43,7 @@ const ProfileScreen = () => {
     })
 
     dispatch(addUserLoginId(0))
+    dispatch(addProductCartAmount(0))
 
     logoutRef.current?.close()
 

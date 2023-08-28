@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Icon } from '@rneui/themed';
-import { LargeText } from '../Text';
+import { LargeText, TinyText } from '../Text';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 
@@ -16,7 +16,7 @@ export const Header = (props) => {
         isWhiteTitle,
     } = props;
 
-    
+    const { productCartAmount } = useSelector((store) => store.productCartAmountReducer);
     const navigation = useNavigation();
     const userLoginId = useSelector((store) => store.userLoginIdReducer.userLoginId);
 
@@ -57,6 +57,8 @@ export const Header = (props) => {
                     ]}
                     {...props}
                 />
+
+                
             </View>
             {
                 isShowRightIcon ?
@@ -65,11 +67,20 @@ export const Header = (props) => {
                             style={styles.iconContainer}
                             onPress={() => navigation.navigate(userLoginId === 0 ? 'Login' : 'Cart')}
                         >
+                            
                             <Icon
                                 name='cart-variant'
                                 type='material-community'
                                 color={Colors.WHITE}
                             />
+
+                            { productCartAmount !== 0 ?
+                            <View style={styles.badgeContainer}>
+                                <TinyText textCustomStyle={{ color: Colors.WHITE }} textToShow={productCartAmount<100 ? productCartAmount : "99+"}/>
+                            </View>
+                            :
+                            null
+                            }
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.iconContainer}
@@ -115,5 +126,15 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         marginLeft: 8,
+    },
+    badgeContainer: {
+        width: 20,
+        height: 20,
+        backgroundColor: 'red',
+        position: 'absolute',
+        
+        right: 3,
+        top: 3,
+        zIndex: 3
     },
 });

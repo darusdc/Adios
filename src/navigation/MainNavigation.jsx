@@ -19,6 +19,8 @@ import { Host } from "react-native-portalize/lib/Host";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import FavoriteProductScreen from "../screens/FavoriteProductScreen";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
+import { countProductCart } from '../utils/countProductCart'
+import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -111,6 +113,8 @@ const MainNavigation = () => {
         const data = realm.objects('UserLoginId')[0]
 
         if (data?.userId){
+            const countResult = countProductCart(data.userId);
+            dispatch(addProductCartAmount(countResult));
             dispatch(addUserLoginId(data.userId))
         }
 

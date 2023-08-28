@@ -13,10 +13,14 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { CustomButton } from '../components/Button';
 import { useSelector } from 'react-redux';
 import { generateId } from '../utils/generateId';
+import { useDispatch } from 'react-redux';
+import { countProductCart } from '../utils/countProductCart';
+import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
 
 const ProductDetailScreen = () => {
     const route = useRoute()
     const navigation = useNavigation()
+    const dispatch = useDispatch()
     const { userLoginId } = useSelector((store) => store.userLoginIdReducer);
     const { id } = route.params
     const [product, setProduct] = useState({});
@@ -87,6 +91,10 @@ const ProductDetailScreen = () => {
                 isSelected: false,
               });
             });
+
+            const countResult = countProductCart(userLoginId);
+            console.log(countResult)
+            dispatch(addProductCartAmount(countResult));
             ToastAndroid.show('Successfully add the product to cart!', ToastAndroid.SHORT);
             getSizes();
           }
@@ -105,15 +113,15 @@ const ProductDetailScreen = () => {
       };
 
     
-    const carouselRender = ({item}) => {
-      console.log(item);
-      <View style={styles.container}>
-        <ImageBackground
-          style={styles.imageBackgroundStyle}
-          source={{ uri: item.link }}
-        ></ImageBackground>
-      </View>
-    }
+    // const carouselRender = ({item}) => {
+    //   console.log(item);
+    //   <View style={styles.container}>
+    //     <ImageBackground
+    //       style={styles.imageBackgroundStyle}
+    //       source={{ uri: item.link }}
+    //     ></ImageBackground>
+    //   </View>
+    // }
   useEffect(() => {
     getProduct()
     getSizes()
