@@ -1,11 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View} from 'react-native'
+import { View} from 'react-native'
 import realm from '../store/realm';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import Product from '../components/Product';
 import { Header } from '../components/Header/Header';
-import { Text } from '@rneui/base';
 
 const FavoriteProductScreen = () => {
     const [favoriteProducts, setFavoriteProducts] = useState([])
@@ -23,7 +22,7 @@ const FavoriteProductScreen = () => {
     ))
     
     return (
-        <View style={styles.container}>
+        <View style={{flex:1}}>
             <Header
                 textToShow = "Favorite Products"
                 isShowRightIcon
@@ -50,10 +49,3 @@ const FavoriteProductScreen = () => {
 }
 
 export default FavoriteProductScreen
-
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        resizeMode: "contain"
-    }
-})

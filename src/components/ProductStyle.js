@@ -9,15 +9,15 @@ const styles = StyleSheet.create({
         productItemContainer: {
             borderWidth: 1,
             borderColor: Colors.BORDER_COLOR,
-            width: itemWidth+5,
+            width: itemWidth,
             flex: 1,
             padding: 16,
             margin: 8,
             borderRadius: 5,
-            zIndex:1
+            zIndex:0
         },
         productImage: {
-            width: itemWidth-5,
+            width: itemWidth-200,
             height: itemHeight,
             resizeMode: 'contain',
             zIndex:0,

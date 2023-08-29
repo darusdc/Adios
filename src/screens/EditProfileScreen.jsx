@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Formik } from 'formik';
 import { CustomButton } from '../components/Button';
-import { MediumText, SmallText } from '../components/Text';
+import { SmallText } from '../components/Text';
 import Colors from '../constants/Colors';
 import { Icon } from '@rneui/themed';
 import { Modalize } from 'react-native-modalize';
@@ -12,12 +12,12 @@ import { useSelector } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfileScreen = () => {
-    const userLoginId = useSelector((store)=> store.userLoginIdReducer.userLoginId)
+    const userLoginId = useSelector((store) => store.userLoginIdReducer.userLoginId)
     const [userProfile, setUserProfile] = useState({})
     const getUserData = () => {
         const data = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
-        const {name, email, phone, profileImage} = data
-        setUserProfile({name, email, phone, profileImage})
+        const { name, email, phone, profileImage } = data
+        setUserProfile({ name, email, phone, profileImage })
     }
     const editProfileRef = useRef(null)
     const onGalleryClick = () => {
@@ -26,7 +26,8 @@ const EditProfileScreen = () => {
             height: 400,
             cropping: true
         }).then((image) => {
-            setUserProfile({...userProfile,
+            setUserProfile({
+                ...userProfile,
                 profileImage: image.path
             })
             editProfileRef.current?.close()
@@ -41,7 +42,8 @@ const EditProfileScreen = () => {
             height: 400,
             cropping: true
         }).then((image) => {
-            setUserProfile({...userProfile,
+            setUserProfile({
+                ...userProfile,
                 profileImage: image.path
             })
             editProfileRef.current?.close()
@@ -52,23 +54,23 @@ const EditProfileScreen = () => {
 
     const onInputChange = (key, value) => {
         setUserProfile({
-        ...userProfile,
-        [key]: value,
+            ...userProfile,
+            [key]: value,
         });
-        };
+    };
 
     const onSubmit = (data) => {
         const dataToUpdate = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
         realm.write(() => {
             dataToUpdate.name = data.name,
-            dataToUpdate.email = data.email,
-            dataToUpdate.phone = data.phone,
-            dataToUpdate.profileImage = userProfile.profileImage || ""
+                dataToUpdate.email = data.email,
+                dataToUpdate.phone = data.phone,
+                dataToUpdate.profileImage = userProfile.profileImage || ""
         })
     }
     useEffect(() => {
         getUserData()
-    } , [])
+    }, [])
     return (
         <View style={styles.mainContainer}>
             <Header
@@ -96,7 +98,7 @@ const EditProfileScreen = () => {
                                 source={{ uri: values?.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png' }}
                             />
                             <TouchableOpacity
-                                onPress = {()=>{
+                                onPress={() => {
                                     editProfileRef.current?.open()
                                 }}>
                                 <SmallText
@@ -107,11 +109,11 @@ const EditProfileScreen = () => {
                         </View>
 
                         {/* input name and error message codes */}
-                        <SmallText textToShow="Name"/>
+                        <SmallText textToShow="Name" />
                         <View style={styles.input}>
-                            <Icon name='person' type='ionicon'/>
+                            <Icon name='person' type='ionicon' />
                             <TextInput
-                                onChangeText={(text) => onInputChange('name',text)}
+                                onChangeText={(text) => onInputChange('name', text)}
                                 onBlur={handleBlur('name')}
                                 placeholder='your name'
                                 value={userProfile.name}
@@ -120,18 +122,18 @@ const EditProfileScreen = () => {
                             />
                         </View>
                         {
-                            errors.name && touched.name ? 
-                            <SmallText 
-                                textToShow={errors.name}
-                                textCustomStyle={styles.errorMessage}
-                            /> : null
+                            errors.name && touched.name ?
+                                <SmallText
+                                    textToShow={errors.name}
+                                    textCustomStyle={styles.errorMessage}
+                                /> : null
                         }
                         {/* input email and error message codes */}
-                        <SmallText textToShow="Email"/>
+                        <SmallText textToShow="Email" />
                         <View style={styles.input}>
-                            <Icon name='email' type='material-community'/>
+                            <Icon name='email' type='material-community' />
                             <TextInput
-                                 onChangeText={(text) => onInputChange('email',text)}
+                                onChangeText={(text) => onInputChange('email', text)}
                                 onBlur={handleBlur('email')}
                                 placeholder='your email'
                                 value={values?.email}
@@ -140,19 +142,19 @@ const EditProfileScreen = () => {
                             />
                         </View>
                         {
-                            errors.email && touched.email ? 
-                            <SmallText 
-                                textToShow={errors.email}
-                                textCustomStyle={styles.errorMessage}
-                            /> : null
+                            errors.email && touched.email ?
+                                <SmallText
+                                    textToShow={errors.email}
+                                    textCustomStyle={styles.errorMessage}
+                                /> : null
                         }
 
                         {/* input phone and error message codes */}
-                        <SmallText textToShow="Phone"/>
+                        <SmallText textToShow="Phone" />
                         <View style={styles.input}>
-                            <Icon name='phone' type='material-community'/>
+                            <Icon name='phone' type='material-community' />
                             <TextInput
-                                 onChangeText={(text) => onInputChange('phone',text)}
+                                onChangeText={(text) => onInputChange('phone', text)}
                                 onBlur={handleBlur('phone')}
                                 placeholder='your phone'
                                 value={values?.phone}
@@ -161,11 +163,11 @@ const EditProfileScreen = () => {
                             />
                         </View>
                         {
-                            errors.phone && touched.phone ? 
-                            <SmallText 
-                                textToShow={errors.phone}
-                                textCustomStyle={styles.errorMessage}
-                            /> : null
+                            errors.phone && touched.phone ?
+                                <SmallText
+                                    textToShow={errors.phone}
+                                    textCustomStyle={styles.errorMessage}
+                                /> : null
                         }
 
                         <CustomButton
@@ -187,7 +189,7 @@ const EditProfileScreen = () => {
                             type='material-community'
                             textToShow="Take a Picture"
                             buttonCustomStyle={styles.buttonStyle}
-                            onPress = {onCameraClick}
+                            onPress={onCameraClick}
                         />
                     </View>
                     <View style={styles.editProfileButtonContainer}>
@@ -197,7 +199,7 @@ const EditProfileScreen = () => {
                             type='antdesign'
                             textToShow="Take from Gallery"
                             buttonCustomStyle={styles.buttonStyle}
-                            onPress = {onGalleryClick}
+                            onPress={onGalleryClick}
                         />
                     </View>
                 </View>
@@ -226,10 +228,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    editProfileContentContainer:{
-        flex:1
+    editProfileContentContainer: {
+        flex: 1
     },
-    editProfileButtonContainer:{
+    editProfileButtonContainer: {
         flexDirection: "column"
     },
     profileImageContainer: {
