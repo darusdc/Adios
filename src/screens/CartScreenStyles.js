@@ -82,6 +82,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    deleteText: {
+        textDecorationLine: 'underline',
+        color: Colors.PRIMARY,
+    },
+    emptyContainer: {
+        alignItems: 'center',
+    },
+    lottieContainer: {
+        width: '40%',
+        height: 200,
+    },
+    emptyMessageContainer: {
+        position: 'absolute',
+        bottom: 10,
+    },
+
 })
 
 export default styles

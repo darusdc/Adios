@@ -18,118 +18,118 @@ import { countProductCart } from '../utils/countProductCart';
 import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
 
 const ProductDetailScreen = () => {
-    const route = useRoute()
-    const navigation = useNavigation()
-    const dispatch = useDispatch()
-    const { userLoginId } = useSelector((store) => store.userLoginIdReducer);
-    const { id } = route.params
-    const [product, setProduct] = useState({});
-    const [brandName, setBrandName] = useState('');
-    const [productSizes, setProductSizes] = useState([])
-    const getProduct = () => {
-      const productDetail = realm.objects('Product').filtered(`id == ${id}`)[0]
-      const productBrand = realm.objects('Brand').filtered(`id == ${id}`)[0];
-      
-      setProduct(productDetail)
-      setBrandName(productBrand)
-    }
+  const route = useRoute()
+  const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const { userLoginId } = useSelector((store) => store.userLoginIdReducer);
+  const { id } = route.params
+  const [product, setProduct] = useState({});
+  const [brandName, setBrandName] = useState('');
+  const [productSizes, setProductSizes] = useState([])
+  const getProduct = () => {
+    const productDetail = realm.objects('Product').filtered(`id == ${id}`)[0]
+    const productBrand = realm.objects('Brand').filtered(`id == ${id}`)[0];
 
-    const getSizes = () => {
-      const sizes = realm.objects('Size');
+    setProduct(productDetail)
+    setBrandName(productBrand)
+  }
 
-      realm.write(() => {
-        sizes.forEach((item) => {
-          item.isSelected = false;
-          });
-        });
-      
-        setProductSizes(sizes)
-    }
+  const getSizes = () => {
+    const sizes = realm.objects('Size');
 
-    const onClickSize = (sizeId) => {
-      const oldSizes = productSizes;
-      
-      realm.write(() => {
-        oldSizes.forEach((item) => {
-          item.isSelected = (item.id === sizeId)
-        })
+    realm.write(() => {
+      sizes.forEach((item) => {
+        item.isSelected = false;
+      });
+    });
+
+    setProductSizes(sizes)
+  }
+
+  const onClickSize = (sizeId) => {
+    const oldSizes = productSizes;
+
+    realm.write(() => {
+      oldSizes.forEach((item) => {
+        item.isSelected = (item.id === sizeId)
       })
-      
-      const updatedSizes = realm.objects('Size');
-      setProductSizes(updatedSizes)
-    }
+    })
 
-    const onClickAddToCart = () => {
-      const selectedSize = realm.objects('Size').filtered('isSelected == true')[0];
-      
-      if (selectedSize) {
-        const existingData = realm.objects('Cart').filtered(
-          `idUser == ${userLoginId} AND
+    const updatedSizes = realm.objects('Size');
+    setProductSizes(updatedSizes)
+  }
+
+  const onClickAddToCart = () => {
+    const selectedSize = realm.objects('Size').filtered('isSelected == true')[0];
+
+    if (selectedSize) {
+      const existingData = realm.objects('Cart').filtered(
+        `idUser == ${userLoginId} AND
           idProduct == ${id} AND
           idSelectedSize == ${selectedSize.id}`
-          )[0];
-          
-          if (existingData) {
-            realm.write(() => {
-              existingData.quantity += 1
-            });
-              
-            ToastAndroid.show(
-              'Successfully updated the quantity of product in your cart!',
-              ToastAndroid.SHORT
-            );
-            getSizes();
-          } else {
-            const newId = generateId('Cart');
-              realm.write(() => {
-                realm.create('Cart', {
-                id: newId,
-                idUser: userLoginId,
-                idProduct: id,
-                idSelectedSize: selectedSize.id,
-                quantity: 1,
-                isSelected: false,
-              });
-            });
+      )[0];
 
-            const countResult = countProductCart(userLoginId);
-            console.log(countResult)
-            dispatch(addProductCartAmount(countResult));
-            ToastAndroid.show('Successfully add the product to cart!', ToastAndroid.SHORT);
-            getSizes();
-          }
-      } else {
-        Alert.alert(
-          'Warning!',
-          'Please choose the size before add the product to cart!',
-          [
-            {
-              text: 'OK',
-              onPress: () => console.log('OK pressed'),
-            },
-          ],
+      if (existingData) {
+        realm.write(() => {
+          existingData.quantity += 1
+        });
+
+        ToastAndroid.show(
+          'Successfully updated the quantity of product in your cart!',
+          ToastAndroid.SHORT
         );
+        getSizes();
+      } else {
+        const newId = generateId('Cart');
+        realm.write(() => {
+          realm.create('Cart', {
+            id: newId,
+            idUser: userLoginId,
+            idProduct: id,
+            idSelectedSize: selectedSize.id,
+            quantity: 1,
+            isSelected: false,
+          });
+        })
+        ToastAndroid.show('Successfully add the product to cart!', ToastAndroid.SHORT);
       }
-      };
 
-    
-    // const carouselRender = ({item}) => {
-    //   console.log(item);
-    //   <View style={styles.container}>
-    //     <ImageBackground
-    //       style={styles.imageBackgroundStyle}
-    //       source={{ uri: item.link }}
-    //     ></ImageBackground>
-    //   </View>
-    // }
+      const countResult = countProductCart(userLoginId);
+      console.log(countResult)
+      dispatch(addProductCartAmount(countResult));
+      getSizes();
+    } else {
+      Alert.alert(
+        'Warning!',
+        'Please choose the size before add the product to cart!',
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log('OK pressed'),
+          },
+        ],
+      );
+    }
+  };
+
+
+  // const carouselRender = ({item}) => {
+  //   console.log(item);
+  //   <View style={styles.container}>
+  //     <ImageBackground
+  //       style={styles.imageBackgroundStyle}
+  //       source={{ uri: item.link }}
+  //     ></ImageBackground>
+  //   </View>
+  // }
   useEffect(() => {
     getProduct()
     getSizes()
-  },[])
+  }, [])
   return (
-    <View style={{flex:1}}>
+    <View style={{ flex: 1 }}>
       <Header
-        textToShow = "Detail Product"
+        textToShow="Detail Product"
         isShowLogo
         isWhiteLogo
         isShowRightIcon
@@ -146,8 +146,8 @@ const ProductDetailScreen = () => {
             renderItem={({ item }) => (
               <View style={styles.container}>
                 <Image
-                style={{...styles.imageBackgroundStyle,resizeMode: "contain"}}
-                source={{ uri: item.link}}
+                  style={{ ...styles.imageBackgroundStyle, resizeMode: "contain" }}
+                  source={{ uri: item.link }}
 
                 />
               </View>
@@ -156,14 +156,14 @@ const ProductDetailScreen = () => {
         </View>
 
         <View style={productDetailStyles.productDetailContainer}>
-          <MediumText textToShow={brandName.brandName} textCustomStyle={productDetailStyles.uppercase}/>
-          <LargeText textToShow={product.name} textCustomStyle={productDetailStyles.productNameText}/>
+          <MediumText textToShow={brandName.brandName} textCustomStyle={productDetailStyles.uppercase} />
+          <LargeText textToShow={product.name} textCustomStyle={productDetailStyles.productNameText} />
           <MediumText textToShow={`$ ${product.price}`} />
         </View>
 
         <SmallText
           textToShow='Select Size'
-          textCustomStyle={{...productDetailStyles.heading, marginHorizontal: 16 }}
+          textCustomStyle={{ ...productDetailStyles.heading, marginHorizontal: 16 }}
         />
         <FlatList
           data={productSizes}
@@ -172,7 +172,7 @@ const ProductDetailScreen = () => {
           contentContainerStyle={{ padding: 8 }}
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <TouchableOpacity style={{...productDetailStyles.sizeButtonContainer,backgroundColor: item.isSelected? Colors.PRIMARY : null }} onPress={() => onClickSize(item.id)}>
+            <TouchableOpacity style={{ ...productDetailStyles.sizeButtonContainer, backgroundColor: item.isSelected ? Colors.PRIMARY : null }} onPress={() => onClickSize(item.id)}>
               <SmallText textToShow={item.size} />
             </TouchableOpacity>
           )}
@@ -184,8 +184,8 @@ const ProductDetailScreen = () => {
             textCustomStyle={productDetailStyles.heading}
           />
           <SmallText
-          textToShow={product.description}
-          textCustomStyle={productDetailStyles.description}
+            textToShow={product.description}
+            textCustomStyle={productDetailStyles.description}
           />
         </View>
       </ScrollView>
@@ -193,16 +193,16 @@ const ProductDetailScreen = () => {
       <View style={productDetailStyles.bottomContainer}>
         <TouchableOpacity style={productDetailStyles.heartContainer}>
           <Icon
-          name={product.isLike ? 'heart-circle-sharp' : "heart-circle-outline"}
-          type='ionicon'
-          size={30}
-          color={product.isLike ? 'red' : 'black'}
+            name={product.isLike ? 'heart-circle-sharp' : "heart-circle-outline"}
+            type='ionicon'
+            size={30}
+            color={product.isLike ? 'red' : 'black'}
           />
         </TouchableOpacity>
         <CustomButton
           textToShow='+ Add to Cart'
           buttonCustomStyle={productDetailStyles.addToCartButton}
-          onPress={() => userLoginId!=0 ? onClickAddToCart() : navigation.navigate('Login')}
+          onPress={() => userLoginId != 0 ? onClickAddToCart() : navigation.navigate('Login')}
         />
       </View>
     </View>

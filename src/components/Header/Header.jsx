@@ -77,7 +77,7 @@ export const Header = (props) => {
 
                             { productCartAmount !== 0 ?
                             <View style={styles.badgeContainer}>
-                                <TinyText textCustomStyle={{ color: Colors.WHITE }} textToShow={productCartAmount<100 ? productCartAmount : "99+"}/>
+                                <TinyText textCustomStyle={{ color: Colors.WHITE }} textToShow={productCartAmount<100 ? productCartAmount.toString() : "99+"}/>
                             </View>
                             :
                             null
