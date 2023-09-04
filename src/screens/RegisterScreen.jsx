@@ -59,6 +59,7 @@ const RegisterScreen = () => {
           phone: data.phone,
           password: data.password,
           profileImage: '',
+          address: '',
         })
       })
 

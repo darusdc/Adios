@@ -23,6 +23,7 @@ const realm = new Realm({
         FavoriteProduct,
         Cart
     ],
+    deleteRealmIfMigrationNeeded: true,
 });
 
 

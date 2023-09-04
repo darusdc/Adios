@@ -19,6 +19,7 @@ import styles from './CartScreenStyles';
 import { countProductCart } from '../utils/countProductCart';
 import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
 import LottieView from 'lottie-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const CartScreen = () => {
   const { userLoginId } = useSelector((store) => store.userLoginIdReducer)
@@ -28,6 +29,7 @@ const CartScreen = () => {
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalQuantity, setTotalQuantity] = useState(0)
   const dispatch = useDispatch()
+  const navigation = useNavigation()
 
   const updateBadge = () => {
     const countResult = countProductCart(userLoginId)
@@ -282,7 +284,9 @@ const CartScreen = () => {
           </View>
           <CustomButton
             textToShow={`Buy (${totalQuantity})`}
-            buttonCustomStyle={styles.buyButton}
+            buttonCustomStyle={[styles.buyButton, {backgroundColor: isSelectedExist ? Colors.PRIMARY : Colors.GRAY}]}
+            disabled = {totalQuantity < 1 ? true : false}
+            onPress = { () => {navigation.navigate('OrderConfirmation', {totalPrice, totalQuantity})}}
           />
         </View> :
         null}

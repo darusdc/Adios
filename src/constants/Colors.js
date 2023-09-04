@@ -4,4 +4,5 @@ export default {
     BLACK: 'black',
     WHITE: 'white',
     BORDER_COLOR: '#EDEDED',
+    LIGHT_BLUE: '#E9F0FF',
 }

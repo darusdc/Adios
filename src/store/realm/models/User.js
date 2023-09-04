@@ -7,6 +7,7 @@ export const User = {
         phone: 'string',
         password: 'string',
         profileImage: 'string',
+        address: 'string',
     },
     primaryKey: 'id',
 }
