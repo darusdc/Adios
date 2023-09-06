@@ -24,9 +24,20 @@ const EditAddressScreen = () => {
 
     const getUser = () => {
         const user = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
-        const copiedUser = copyObject(user)
-        setUser(copiedUser)
+        const { address } = user
+        setUser({ address })
+        console.log(user)
     };
+
+    const onClickSave = (data) => {
+        const user = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
+
+        realm.write(() => {
+            user.address = data.address
+        })
+
+        alert('Successfully update your address!')
+    }
 
     useFocusEffect(
         useCallback(
@@ -45,7 +56,7 @@ const EditAddressScreen = () => {
                 initialValues={user}
                 enableReinitialize
                 validationSchema={validateEditAddressForm}
-                onSubmit={(data) => console.log(data)}
+                onSubmit={(data) => onClickSave(data)}
             >
                 {({
                     handleBlur,
@@ -106,5 +117,9 @@ const styles = StyleSheet.create({
     },
     saveButton: {
         marginTop: 16,
+    },
+    errorMessage: {
+        color: 'red',
+        marginTop: 0,
     },
 })

@@ -60,7 +60,7 @@ const OrderConfirmationScreen = () => {
             textToShow='Shipping Address'
             textCustomStyle={[styles.grayText, { fontWeight: 'bold' }]}
           />
-          <MediumText textToShow='User name' />
+          <MediumText textToShow={`${user.name}`} />
           {user.address ?
             <SmallText
               textToShow={`${user.address}`}

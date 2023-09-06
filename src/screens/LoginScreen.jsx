@@ -29,14 +29,13 @@ const LoginScreen = () => {
   const dispatch = useDispatch()
   const onClickSubmit = (data) => {
     const userAccount = realm.objects("User").find((item)=> item.email === data.email)
-    const favoriteProducts = realm.objects('FavoriteProduct').filtered(`idUser == ${userAccount.id}`)[0];
     if (userAccount) {
         if (userAccount.email === data.email && userAccount.password === data.password ){
             realm.write(()=>{
                 realm.create('UserLoginId', {
                     userId: userAccount.id
                 })
-                
+                const favoriteProducts = realm.objects('FavoriteProduct').filtered(`idUser == ${userAccount.id}`)[0];
                 if (favoriteProducts){
                     favoriteProducts.idProducts.forEach((item) => {
                         const product = realm.objects('Product').filtered(`id == ${item}`)[0];
@@ -48,7 +47,11 @@ const LoginScreen = () => {
             const countResult = countProductCart(userAccount.id);
             dispatch(addProductCartAmount(countResult));
             navigation.popToTop()
+        } else {
+            alert('Password is incorrect')
         }
+    } else {
+        alert('Email address is not registered!');
     }
 
   }

@@ -285,7 +285,7 @@ const CartScreen = () => {
           <CustomButton
             textToShow={`Buy (${totalQuantity})`}
             buttonCustomStyle={[styles.buyButton, {backgroundColor: isSelectedExist ? Colors.PRIMARY : Colors.GRAY}]}
-            disabled = {totalQuantity < 1 ? true : false}
+            disabled = {!isSelectedExist}
             onPress = { () => {navigation.navigate('OrderConfirmation', {totalPrice, totalQuantity})}}
           />
         </View> :

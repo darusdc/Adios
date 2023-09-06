@@ -253,6 +253,10 @@ const styles = StyleSheet.create({
     innerInput: {
         flex: 1,
         color: Colors.BLACK
+    },
+    errorMessage: {
+        color: 'red',
+        marginTop: 0,
     }
 });
 
