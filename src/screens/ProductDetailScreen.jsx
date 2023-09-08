@@ -95,7 +95,6 @@ const ProductDetailScreen = () => {
       }
 
       const countResult = countProductCart(userLoginId);
-      console.log(countResult)
       dispatch(addProductCartAmount(countResult));
       getSizes();
     } else {

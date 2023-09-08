@@ -113,8 +113,6 @@ const CartScreen = () => {
   const getCarts = () => {
     const userCarts = realm.objects('Cart').filtered(`idUser == ${userLoginId}`);
     setCarts(userCarts)
-    console.log('----------user carts----------');
-    console.log(JSON.stringify(userCarts, null, 2));
     let tempTotalPrice = 0;
     let tempTotalQuantity = 0;
     const selectedCarts = userCarts.filtered(`isSelected == true`);

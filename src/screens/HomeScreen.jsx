@@ -41,7 +41,6 @@ const HomeScreen = () => {
     const productDB =  realm.objects('Product');
     const fiveProducts = productDB.slice(0,5);
     setProduct(fiveProducts);
-    console.log('product amount: ', productDB.length);
   };
 
   const listRenderItem = ({item}) => (

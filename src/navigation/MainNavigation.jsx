@@ -124,7 +124,6 @@ const MainNavigation = () => {
 
     useEffect(()=>{
         setUserLoginId()
-        console.log('user login id: ', globalUserLoginId)
     },[globalUserLoginId])
 
     return (

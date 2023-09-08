@@ -26,7 +26,6 @@ const EditAddressScreen = () => {
         const user = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
         const { address } = user
         setUser({ address })
-        console.log(user)
     };
 
     const onClickSave = (data) => {
