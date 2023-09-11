@@ -9,13 +9,16 @@ import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-han
 import { CheckBox, Icon, Image } from '@rneui/themed'
 import { LargeText, MediumText, SmallText } from '../components/Text'
 import { CustomButton } from '../components/Button'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import realm from '../store/realm'
 import { getProductImage, getProductName, getProductPrice, getSelectedSize } from '../utils/getProductInfomation';
 import { copyArrayOfObjects } from '../utils/copyData';
 import { Modalize } from 'react-native-modalize';
 import LottieView from 'lottie-react-native';
 import { styles } from './OrderConfirmationScreenStyle';
+import { generateId } from '../utils/generateId';
+import { countProductCart } from '../utils/countProductCart';
+import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
 
 
 const OrderConfirmationScreen = () => {
@@ -30,6 +33,7 @@ const OrderConfirmationScreen = () => {
   const [selectedShipping, setSelectedShipping] = useState({});
   const shippingModalizeRef = useRef(null)
   const [isShowSuccessModal, setIsShowSuccessModal] = useState(false);
+  const dispatch = useDispatch()
 
   const getUser = () => {
     const userData = realm.objects('User').filtered(`id == ${userLoginId}`)[0]
@@ -119,6 +123,38 @@ const OrderConfirmationScreen = () => {
   };
 
   const onClickBuy = () => {
+    const orderId = Date.now();
+
+    realm.write(() => {
+      realm.create('Order', {
+        id: orderId,
+        idUser: userLoginId,
+        idShipping: selectedShipping.id,
+        totalPrice: totalPrice,
+        deliveryFee: selectedShipping.deliveryFee,
+        serviceFee: fee.serviceFee,
+        date: new Date(),
+      });
+
+      cartsToOrder.forEach((item) => {
+        const orderDetailId = generateId('OrderDetail');
+        realm.create('OrderDetail', {
+          id: orderDetailId,
+          idOrder: orderId,
+          idProduct: item.idProduct,
+          idSelectedSize: item.idSelectedSize,
+          price: getProductPrice(item.idProduct),
+          quantity: item.quantity,
+        });
+
+        const cartToDelete = realm.objects('Cart').filtered(`id == ${item.id}`)[0];
+        realm.delete(cartToDelete);
+      });
+
+    });
+
+    const countResult = countProductCart(userLoginId)
+    dispatch(addProductCartAmount(countResult))
     setIsShowSuccessModal(true);
   };
 
@@ -302,7 +338,7 @@ const OrderConfirmationScreen = () => {
           <View style={styles.modalContentContainer}>
             <View style={styles.successLottieContainer}>
               <LottieView
-                style={{ width:"100%", height:"100%" }}
+                style={{ width: "100%", height: "100%" }}
                 autoPlay
                 loop
                 source={require('../assets/lotties/success.json')}

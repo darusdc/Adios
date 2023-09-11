@@ -19,7 +19,8 @@ import styles from './CartScreenStyles';
 import { countProductCart } from '../utils/countProductCart';
 import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction';
 import LottieView from 'lottie-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { generateId } from '../utils/generateId';
 
 const CartScreen = () => {
   const { userLoginId } = useSelector((store) => store.userLoginIdReducer)
@@ -30,10 +31,43 @@ const CartScreen = () => {
   const [totalQuantity, setTotalQuantity] = useState(0)
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  const route = useRoute()
+  const orderId = route.params?.orderId
+  const orderDetails = route.params?.orderDetails
 
   const updateBadge = () => {
     const countResult = countProductCart(userLoginId)
     dispatch(addProductCartAmount(countResult))
+  }
+
+  const setRepurchaseCart = () => {
+    if (orderId && orderDetails) {
+      orderDetails.forEach((item) => {
+        const existingData = realm.objects("Cart")
+          .filtered(`idUser == ${userLoginId} AND 
+                   idProduct == ${item.idProduct} AND
+                   idSelectedSize == ${item.idSelectedSize}`
+          )[0]
+        if (existingData && item.idOrder == orderId) {
+          realm.write(() => {
+            existingData.quantity +=1,
+            existingData.isSelected = true
+          })
+        } else if (item.idOrder === orderId) {
+          const newCartId = generateId('Cart');
+          realm.write(() => {
+            realm.create('Cart', {
+              id: newCartId,
+              idUser: userLoginId,
+              idProduct: item.idProduct,
+              idSelectedSize: item.idSelectedSize,
+              quantity: 1,
+              isSelected: true,
+            });
+          });
+        }
+      })
+    }
   }
 
   const setCartToFalse = () => {
@@ -163,6 +197,7 @@ const CartScreen = () => {
   useEffect(() => {
     setCartToFalse()
     getCarts()
+    setRepurchaseCart()
   }, [])
   return (
     <View style={{ flex: 1 }}>
@@ -259,7 +294,7 @@ const CartScreen = () => {
               <LottieView
                 autoPlay
                 loop
-                style={{width:"100%", height:"100%"}}
+                style={{ width: "100%", height: "100%" }}
                 source={require("../assets/lotties/empty-cart.json")} />
             </View>
             <View style={styles.emptyMessageContainer}>
@@ -282,9 +317,9 @@ const CartScreen = () => {
           </View>
           <CustomButton
             textToShow={`Buy (${totalQuantity})`}
-            buttonCustomStyle={[styles.buyButton, {backgroundColor: isSelectedExist ? Colors.PRIMARY : Colors.GRAY}]}
-            disabled = {!isSelectedExist}
-            onPress = { () => {navigation.navigate('OrderConfirmation', {totalPrice, totalQuantity})}}
+            buttonCustomStyle={[styles.buyButton, { backgroundColor: isSelectedExist ? Colors.PRIMARY : Colors.GRAY }]}
+            disabled={!isSelectedExist}
+            onPress={() => { navigation.navigate('OrderConfirmation', { totalPrice, totalQuantity }) }}
           />
         </View> :
         null}

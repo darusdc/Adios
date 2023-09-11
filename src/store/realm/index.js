@@ -8,6 +8,8 @@ import { Product, ProductImage } from './models/Product';
 import { User, UserLoginId } from './models/User';
 import { FavoriteProduct } from './models/FavoriteProduct';
 import { Cart } from './models/Cart';
+import { Order } from './models/Order';
+import { OrderDetail } from './models/OrderDetail';
 
 const realm = new Realm({
     schema: [
@@ -21,7 +23,9 @@ const realm = new Realm({
         User,
         UserLoginId,
         FavoriteProduct,
-        Cart
+        Cart,
+        Order,
+        OrderDetail
     ],
     deleteRealmIfMigrationNeeded: true,
 });
