@@ -14,6 +14,7 @@ import realm from '../store/realm'
 import { generateId } from '../utils/generateId'
 import { useDispatch } from 'react-redux'
 import { addUserLoginId } from '../store/redux/actions/userLoginIdAction'
+import { CheckBox } from '@rneui/themed'
 
 const RegisterScreen = () => {
   const navigation = useNavigation()
@@ -21,17 +22,18 @@ const RegisterScreen = () => {
 
   const validateRegisterForm = yup.object().shape({
     name: yup.string()
-          .required('Name is required'),
+      .required('Name is required'),
     email: yup.string()
-          .email("Please insert valid email")
-          .required("Email is required"),
+      .email("Please insert valid email")
+      .required("Email is required"),
     phone: yup.string()
-          .matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'invalid phone number')
-          .required("Phone number is required"),
+      .matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'invalid phone number')
+      .required("Phone number is required"),
     password: yup.string().required('password is required'),
     passwordConfirmation: yup.string()
-          .oneOf([yup.ref('password')], "password didn't match")
-          .required("please fill this form"),
+      .oneOf([yup.ref('password')], "password didn't match")
+      .required("please fill this form"),
+    isAgree: yup.boolean().oneOf([true], 'Please accept the terms and policy to proceed'),
 
   });
 
@@ -49,10 +51,10 @@ const RegisterScreen = () => {
       }
     }
 
-    if (!isAlreadyRegistered){
+    if (!isAlreadyRegistered) {
       const newUserId = generateId('User')
       realm.write(() => {
-        realm.create('User',{
+        realm.create('User', {
           id: newUserId,
           name: data.name,
           email: data.email,
@@ -71,17 +73,18 @@ const RegisterScreen = () => {
 
     <View style={styles.mainContainer}>
       <Header
-      textToShow='Create account'
-      isStackScreen
-      headerCustomStyle={{backgroundColor: Colors.WHITE}}
+        textToShow='Create account'
+        isStackScreen
+        headerCustomStyle={{ backgroundColor: Colors.WHITE }}
       />
       <Formik
         initialValues={{
-          name:'',
-          email:'',
-          phone:'',
-          password:'',
-          passwordConfirmation:'',
+          name: '',
+          email: '',
+          phone: '',
+          password: '',
+          passwordConfirmation: '',
+          isAgree: false
         }}
         validationSchema={validateRegisterForm}
         onSubmit={(data) => onClickRegister(data)}
@@ -91,146 +94,167 @@ const RegisterScreen = () => {
           handleBlur,
           handleSubmit,
           errors,
-          touched
+          touched,
+          values,
+          setFieldValue
         }) => (
           <ScrollView style={styles.contentContainer}>
-            <LargeText textToShow="Register at Adios:"/>
-            <SmallText textToShow="Please fill out the form below!"/>
+            <LargeText textToShow="Register at Adios:" />
+            <SmallText textToShow="Please fill out the form below!" />
 
-            <SmallText textToShow="name"/>
+            <SmallText textToShow="name" />
             <View style={styles.input}>
               <Icon
-              name='account'
-              type='material-community'
-              color={Colors.GRAY}
+                name='account'
+                type='material-community'
+                color={Colors.GRAY}
               />
               <TextInput
-              onChangeText={handleChange('name')}
-              onBlur={handleBlur('name')}
-              placeholder='name'
-              style={styles.innerInput}
-              placeholderTextColor={Colors.GRAY}/>
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                placeholder='name'
+                style={styles.innerInput}
+                placeholderTextColor={Colors.GRAY} />
             </View>
             {
               errors.name && touched.name ?
-              <SmallText 
-              textToShow={errors.name}
-              textCustomStyle={styles.errorMessage}
-              />:
-              null
+                <SmallText
+                  textToShow={errors.name}
+                  textCustomStyle={styles.errorMessage}
+                /> :
+                null
             }
 
-            <SmallText textToShow="email"/>
+            <SmallText textToShow="email" />
             <View style={styles.input}>
               <Icon
-              name='email'
-              type='material-community'
-              color={Colors.GRAY}
+                name='email'
+                type='material-community'
+                color={Colors.GRAY}
               />
               <TextInput
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              placeholder='email'
-              style={styles.innerInput}
-              placeholderTextColor={Colors.GRAY}/>
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                placeholder='email'
+                style={styles.innerInput}
+                placeholderTextColor={Colors.GRAY} />
             </View>
             {
               errors.email && touched.email ?
-              <SmallText 
-              textToShow={errors.email}
-              textCustomStyle={styles.errorMessage}
-              />:
-              null
+                <SmallText
+                  textToShow={errors.email}
+                  textCustomStyle={styles.errorMessage}
+                /> :
+                null
             }
-            <SmallText textToShow="phone"/>
+            <SmallText textToShow="phone" />
             <View style={styles.input}>
               <Icon
-              name='phone'
-              type='material-community'
-              color={Colors.GRAY}
+                name='phone'
+                type='material-community'
+                color={Colors.GRAY}
               />
               <TextInput
-              onChangeText={handleChange('phone')}
-              onBlur={handleBlur('phone')}
-              placeholder='phone'
-              style={styles.innerInput}
-              placeholderTextColor={Colors.GRAY}/>
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                placeholder='phone'
+                style={styles.innerInput}
+                placeholderTextColor={Colors.GRAY} />
             </View>
             {
               errors.phone && touched.phone ?
-              <SmallText 
-              textToShow={errors.phone}
-              textCustomStyle={styles.errorMessage}
-              />:
-              null
+                <SmallText
+                  textToShow={errors.phone}
+                  textCustomStyle={styles.errorMessage}
+                /> :
+                null
             }
-            <SmallText textToShow="password"/>
+            <SmallText textToShow="password" />
             <View style={styles.input}>
               <Icon
-              name='lock'
-              type='material-community'
-              color={Colors.GRAY}
+                name='lock'
+                type='material-community'
+                color={Colors.GRAY}
               />
               <TextInput
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              placeholder='password'
-              style={styles.innerInput}
-              placeholderTextColor={Colors.GRAY}/>
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                placeholder='password'
+                style={styles.innerInput}
+                placeholderTextColor={Colors.GRAY} />
             </View>
             {
               errors.password && touched.password ?
-              <SmallText 
-              textToShow={errors.password}
-              textCustomStyle={styles.errorMessage}
-              />:
-              null
+                <SmallText
+                  textToShow={errors.password}
+                  textCustomStyle={styles.errorMessage}
+                /> :
+                null
             }
-            <SmallText textToShow="password confirmation"/>
+            <SmallText textToShow="password confirmation" />
             <View style={styles.input}>
               <Icon
-              name='lock'
-              type='material-community'
-              color={Colors.GRAY}
+                name='lock'
+                type='material-community'
+                color={Colors.GRAY}
               />
               <TextInput
-              onChangeText={handleChange('passwordConfirmation')}
-              onBlur={handleBlur('passwordConfirmation')}
-              placeholder='password confirmation'
-              style={styles.innerInput}
-              placeholderTextColor={Colors.GRAY}/>
+                onChangeText={handleChange('passwordConfirmation')}
+                onBlur={handleBlur('passwordConfirmation')}
+                placeholder='password confirmation'
+                style={styles.innerInput}
+                placeholderTextColor={Colors.GRAY} />
             </View>
             {
               errors.passwordConfirmation && touched.passwordConfirmation ?
-              <SmallText 
-              textToShow={errors.passwordConfirmation}
-              textCustomStyle={styles.errorMessage}
-              />:
-              null
+                <SmallText
+                  textToShow={errors.passwordConfirmation}
+                  textCustomStyle={styles.errorMessage}
+                /> :
+                null
             }
 
             <View style={styles.bottomContentContainer}>
-                            
-                            <CustomButton
-                                textToShow='Register'
-                                buttonCustomStyle={styles.registerButton}
-                                onPress={handleSubmit}
-                            />
-                            <MediumText textToShow='Or' />
-                            <View style={styles.questionContainer}>
-                                <MediumText textToShow='Already have an account? ' />
-                                <TouchableOpacity onPress={() => navigation.goBack()}>
-                                    <MediumText
-                                        textToShow='Login'
-                                        textCustomStyle={styles.loginText}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-            
+
+              <View style={styles.termsContainer}>
+                <CheckBox
+                  containerStyle={styles.checboxContainer}
+                  checkedColor={Colors.PRIMARY}
+                  onBlur={handleBlur('isAgree')}
+                  onPress={() => setFieldValue('isAgree', !values.isAgree)}
+                  checked = {values.isAgree}
+                />
+                <SmallText textToShow='I agree with Terms and Policy' />
+              </View>
+              {
+                  errors.isAgree && touched.isAgree ?
+                    <SmallText textToShow={errors.isAgree}
+                      textCustomStyle={styles.errorMessage}
+                    />
+                    :
+                    null
+                }
+
+              <CustomButton
+                textToShow='Register'
+                buttonCustomStyle={styles.registerButton}
+                onPress={handleSubmit}
+              />
+              <MediumText textToShow='Or' />
+              <View style={styles.questionContainer}>
+                <MediumText textToShow='Already have an account? ' />
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <MediumText
+                    textToShow='Login'
+                    textCustomStyle={styles.loginText}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
           </ScrollView>
         )
-        
+
         }
 
       </Formik>

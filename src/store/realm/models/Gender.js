@@ -4,6 +4,7 @@ export const Gender = {
         id: 'int',
         genderName: 'string',
         thumbnail: 'string',
+        isSelected: 'bool',
     },
     primaryKey: 'id',
 };

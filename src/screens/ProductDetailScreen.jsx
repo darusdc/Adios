@@ -28,7 +28,7 @@ const ProductDetailScreen = () => {
   const [productSizes, setProductSizes] = useState([])
   const getProduct = () => {
     const productDetail = realm.objects('Product').filtered(`id == ${id}`)[0]
-    const productBrand = realm.objects('Brand').filtered(`id == ${id}`)[0];
+    const productBrand = realm.objects('Brand').filtered(`id == ${productDetail.idBrand}`)[0];
 
     setProduct(productDetail)
     setBrandName(productBrand)
@@ -71,7 +71,7 @@ const ProductDetailScreen = () => {
 
       if (existingData) {
         realm.write(() => {
-          existingData.quantity += 1
+          existingData.quantity ++
         });
 
         ToastAndroid.show(
@@ -155,7 +155,7 @@ const ProductDetailScreen = () => {
         </View>
 
         <View style={productDetailStyles.productDetailContainer}>
-          <MediumText textToShow={brandName.brandName} textCustomStyle={productDetailStyles.uppercase} />
+          <MediumText textToShow={`${brandName?.brandName}`} textCustomStyle={productDetailStyles.uppercase} />
           <LargeText textToShow={product.name} textCustomStyle={productDetailStyles.productNameText} />
           <MediumText textToShow={`$ ${product.price}`} />
         </View>

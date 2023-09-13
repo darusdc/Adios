@@ -4,6 +4,7 @@ export const Category = {
         id: 'int',
         shoeCategory: 'string',
         thumbnail: 'string',
+        isSelected: 'bool',
     },
     primaryKey: 'id',
 };

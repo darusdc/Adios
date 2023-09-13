@@ -24,6 +24,7 @@ import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAc
 import OrderConfirmationScreen from "../screens/OrderConfirmationScreen";
 import EditAddressScreen from "../screens/EditAddressScreen";
 import OrderHistoryScreen from "../screens/OrderHistoryScreen";
+import ProductListScreen from "../screens/ProductListScreen";
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -168,6 +169,7 @@ const MainNavigation = () => {
                 <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
                 <Stack.Screen name="OrderConfirmation" component={OrderConfirmationScreen} />
                 <Stack.Screen name="EditAddress" component={EditAddressScreen} />
+                <Stack.Screen name="ProductList" component={ProductListScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import Colors from '../constants/Colors';
 const styles = StyleSheet.create({
     mainContainer: {
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     },
     innerInput: {
         flex: 1,
-        color:'black',
+        color: 'black',
     },
     errorMessage: {
         color: 'red',
@@ -45,6 +45,15 @@ const styles = StyleSheet.create({
     loginText: {
         color: Colors.PRIMARY,
         textDecorationLine: 'underline',
+    },
+    termsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    checboxContainer: {
+        padding: 0,
+        margin: 0,
+        marginLeft: 0
     },
 });
 

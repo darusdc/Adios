@@ -5,6 +5,7 @@ export const Brand = {
         brandName: 'string',
         logo: 'string',
         thumbnail: 'string',
+        isSelected: 'bool',
     },
     primaryKey: 'id',
 };

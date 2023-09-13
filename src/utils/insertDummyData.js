@@ -19,7 +19,8 @@ export const insertDummyData = (modelName, data) => {
     if (!modelDB.length){
         realm.write(() => {
             data.forEach((item) => {
-                realm.create(modelName, 
+                realm.create(
+                    modelName, 
                     item
                 )
             });

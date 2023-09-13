@@ -81,6 +81,8 @@ const ProfileScreen = () => {
           textCustomStyle={styles.featureTitle}/>
         <FeatureList textToShow="Change Profile" name='account-edit'
           type='material-community' onPress={()=> navigation.navigate('Edit')}/>
+          <FeatureList textToShow="Change Address" name='address'
+          type='entypo' onPress = {() => navigation.navigate("EditAddress")}/>
         <FeatureList textToShow="Change Password" name='shield-alert'
           type='material-community' />
         <MediumText textToShow='General' textCustomStyle={[styles.featureTitle, { marginTop: 16 }]} />
