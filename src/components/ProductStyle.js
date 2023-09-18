@@ -2,7 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native'
 const {width} = Dimensions.get('window')
 import Colors from '../constants/Colors'
 const itemShowNumber = 2
-const itemSpace = 16
+const itemSpace = 24
 const itemWidth = (width - (itemSpace * itemShowNumber + 1))/ itemShowNumber
 const itemHeight = itemWidth - (itemSpace*itemShowNumber)
 const styles = StyleSheet.create({
@@ -10,11 +10,11 @@ const styles = StyleSheet.create({
             borderWidth: 1,
             borderColor: Colors.BORDER_COLOR,
             width: itemWidth,
-            flex: 1,
             padding: 16,
             margin: 8,
             borderRadius: 5,
-            zIndex:0
+            zIndex:0,
+            resizeMode:'contain',
         },
         productImage: {
             width: itemWidth-200,
