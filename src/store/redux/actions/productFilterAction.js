@@ -18,3 +18,10 @@ export const addBrandFilter = (value) => {
         payload: value
     }
 }
+
+export const addSortBy = (value) => {
+    return {
+        type: 'ADD_SORT_BY',
+        payload: value
+    }
+}

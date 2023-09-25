@@ -15,6 +15,7 @@ export const Header = (props) => {
         isShowLogo,
         isStackScreen,
         isWhiteTitle,
+        isShowSearch=true,
     } = props;
 
     const { productCartAmount } = useSelector((store) => store.productCartAmountReducer);
@@ -27,7 +28,7 @@ export const Header = (props) => {
                 {
                     isStackScreen ?
                         <TouchableOpacity
-                            onPress={() => {navigation.canGoBack? navigation.goBack():navigation.navigate("Home")}}>
+                            onPress={() => { navigation.canGoBack ? navigation.goBack() : navigation.navigate("Home") }}>
                             <Icon
                                 name='keyboard-backspace'
                                 type='material-community'
@@ -59,7 +60,7 @@ export const Header = (props) => {
                     {...props}
                 />
 
-                
+
             </View>
             {
                 isShowRightIcon ?
@@ -68,33 +69,39 @@ export const Header = (props) => {
                             style={styles.iconContainer}
                             onPress={() => navigation.navigate(userLoginId === 0 ? 'Login' : 'Cart')}
                         >
-                            
+
                             <Icon
                                 name='cart-variant'
                                 type='material-community'
                                 color={Colors.WHITE}
                             />
 
-                            { productCartAmount !== 0 ?
-                            <View style={styles.badgeContainer}>
-                                <TinyText textCustomStyle={{ color: Colors.WHITE }} textToShow={productCartAmount<100 ? productCartAmount.toString() : "99+"}/>
-                            </View>
-                            :
-                            null
+                            {productCartAmount !== 0 ?
+                                <View style={styles.badgeContainer}>
+                                    <TinyText textCustomStyle={{ color: Colors.WHITE }} textToShow={productCartAmount < 100 ? productCartAmount.toString() : "99+"} />
+                                </View>
+                                :
+                                null
                             }
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.iconContainer}
-                        >
-                            <Icon
-                                name='search'
-                                type='material'
-                                color={Colors.WHITE}
-                            />
-                        </TouchableOpacity>
+                        {isShowSearch ?
+                            <TouchableOpacity
+                                style={styles.iconContainer}
+                                onPress={() => {
+                                    navigation.navigate('Search')
+                                }}
+                            >
+                                <Icon
+                                    name='search'
+                                    type='material'
+                                    color={Colors.WHITE}
+                                />
+                            </TouchableOpacity>
+                    : null}
                     </View>
-                    :
-                    null
+            :
+            null
+                    
             }
         </View>
     )

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Linking, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Header } from '../components/Header/Header'
 import { Image } from '@rneui/base'
@@ -84,14 +84,16 @@ const ProfileScreen = () => {
           <FeatureList textToShow="Change Address" name='address'
           type='entypo' onPress = {() => navigation.navigate("EditAddress")}/>
         <FeatureList textToShow="Change Password" name='shield-alert'
-          type='material-community' />
+          type='material-community' onPress={() => { navigation.navigate('ChangePassword') }} />
         <MediumText textToShow='General' textCustomStyle={[styles.featureTitle, { marginTop: 16 }]} />
         <FeatureList textToShow="Term and Conditions" name='file'
           type='material-community' />
         <FeatureList textToShow="Privacy Policy" name='file'
           type='material-community' />
         <FeatureList textToShow="Give Rating" name='ribbon'
-          type='ionicon' />
+          type='ionicon' onPress={() => {
+            Linking.openURL("https://google.com")
+          }}/>
         <CustomButton
             textToShow='Logout'
             buttonCustomStyle={styles.button}

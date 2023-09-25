@@ -1,7 +1,8 @@
 const intialState = {
     genderId: 0,
     categoryId: 0,
-    brandId: 0
+    brandId: 0,
+    sortById: 0
 };
 
 export const productFilterReducer = (state = intialState, action) => {
@@ -26,7 +27,15 @@ export const productFilterReducer = (state = intialState, action) => {
             ...state,
             brandId: newBrandId
         }
+    } else if (action.type === "ADD_SORT_BY") {
+        const newSortById = action.payload
+
+        return {
+            ...state,
+            sortById: newSortById
+        }
     }
+
 
 
     return state;

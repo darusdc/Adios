@@ -25,6 +25,9 @@ import OrderConfirmationScreen from "../screens/OrderConfirmationScreen";
 import EditAddressScreen from "../screens/EditAddressScreen";
 import OrderHistoryScreen from "../screens/OrderHistoryScreen";
 import ProductListScreen from "../screens/ProductListScreen";
+import SearchScreen from "../screens/SearchScreen";
+import SearchResult from "../screens/SearchResultScreen";
+import ChangePasswordScreen from "../screens/ChangePasswordScreen";
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -170,6 +173,9 @@ const MainNavigation = () => {
                 <Stack.Screen name="OrderConfirmation" component={OrderConfirmationScreen} />
                 <Stack.Screen name="EditAddress" component={EditAddressScreen} />
                 <Stack.Screen name="ProductList" component={ProductListScreen} />
+                <Stack.Screen name="Search" component={SearchScreen} />
+                <Stack.Screen name="SearchResult" component={SearchResult} />
+                <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import * as yup from 'yup'
@@ -19,6 +19,8 @@ import { CheckBox } from '@rneui/themed'
 const RegisterScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
 
   const validateRegisterForm = yup.object().shape({
     name: yup.string()
@@ -180,8 +182,17 @@ const RegisterScreen = () => {
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 placeholder='password'
+                secureTextEntry={showPassword}
                 style={styles.innerInput}
                 placeholderTextColor={Colors.GRAY} />
+
+              <TouchableOpacity onPress={() => { setShowPassword(!showPassword) }}>
+                <Icon
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  type='material-community'
+                  color={Colors.GRAY}
+                />
+              </TouchableOpacity>
             </View>
             {
               errors.password && touched.password ?
@@ -202,8 +213,16 @@ const RegisterScreen = () => {
                 onChangeText={handleChange('passwordConfirmation')}
                 onBlur={handleBlur('passwordConfirmation')}
                 placeholder='password confirmation'
+                secureTextEntry={showPasswordConfirmation}
                 style={styles.innerInput}
                 placeholderTextColor={Colors.GRAY} />
+              <TouchableOpacity onPress={() => { setShowPasswordConfirmation(!showPasswordConfirmation) }}>
+                <Icon
+                  name={showPasswordConfirmation ? 'eye' : 'eye-off'}
+                  type='material-community'
+                  color={Colors.GRAY}
+                />
+              </TouchableOpacity>
             </View>
             {
               errors.passwordConfirmation && touched.passwordConfirmation ?
@@ -222,18 +241,18 @@ const RegisterScreen = () => {
                   checkedColor={Colors.PRIMARY}
                   onBlur={handleBlur('isAgree')}
                   onPress={() => setFieldValue('isAgree', !values.isAgree)}
-                  checked = {values.isAgree}
+                  checked={values.isAgree}
                 />
                 <SmallText textToShow='I agree with Terms and Policy' />
               </View>
               {
-                  errors.isAgree && touched.isAgree ?
-                    <SmallText textToShow={errors.isAgree}
-                      textCustomStyle={styles.errorMessage}
-                    />
-                    :
-                    null
-                }
+                errors.isAgree && touched.isAgree ?
+                  <SmallText textToShow={errors.isAgree}
+                    textCustomStyle={styles.errorMessage}
+                  />
+                  :
+                  null
+              }
 
               <CustomButton
                 textToShow='Register'

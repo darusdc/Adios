@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
@@ -18,43 +18,44 @@ import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAc
 
 
 const formValidationSchema = yup.object().shape({
-  email: yup.string()
+    email: yup.string()
         .email('please enter valid email')
         .required('email is required'),
-  password: yup.string()
+    password: yup.string()
         .required('Password is required')
 })
 const LoginScreen = () => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch()
-  const onClickSubmit = (data) => {
-    const userAccount = realm.objects("User").find((item)=> item.email === data.email)
-    if (userAccount) {
-        if (userAccount.email === data.email && userAccount.password === data.password ){
-            realm.write(()=>{
-                realm.create('UserLoginId', {
-                    userId: userAccount.id
-                })
-                const favoriteProducts = realm.objects('FavoriteProduct').filtered(`idUser == ${userAccount.id}`)[0];
-                if (favoriteProducts){
-                    favoriteProducts.idProducts.forEach((item) => {
-                        const product = realm.objects('Product').filtered(`id == ${item}`)[0];
-                        product.isLike = true;
+    const navigation = useNavigation();
+    const dispatch = useDispatch()
+    const [showPassword, setShowPassword] = useState(false)
+    const onClickSubmit = (data) => {
+        const userAccount = realm.objects("User").find((item) => item.email === data.email)
+        if (userAccount) {
+            if (userAccount.email === data.email && userAccount.password === data.password) {
+                realm.write(() => {
+                    realm.create('UserLoginId', {
+                        userId: userAccount.id
                     })
-                }
-            })
-            dispatch(addUserLoginId(userAccount.id))
-            const countResult = countProductCart(userAccount.id);
-            dispatch(addProductCartAmount(countResult));
-            navigation.popToTop()
+                    const favoriteProducts = realm.objects('FavoriteProduct').filtered(`idUser == ${userAccount.id}`)[0];
+                    if (favoriteProducts) {
+                        favoriteProducts.idProducts.forEach((item) => {
+                            const product = realm.objects('Product').filtered(`id == ${item}`)[0];
+                            product.isLike = true;
+                        })
+                    }
+                })
+                dispatch(addUserLoginId(userAccount.id))
+                const countResult = countProductCart(userAccount.id);
+                dispatch(addProductCartAmount(countResult));
+                navigation.popToTop()
+            } else {
+                alert('Password is incorrect')
+            }
         } else {
-            alert('Password is incorrect')
+            alert('Email address is not registered!');
         }
-    } else {
-        alert('Email address is not registered!');
-    }
 
-  }
+    }
     return (
         <View style={styles.mainContainer}>
             <Header
@@ -105,18 +106,27 @@ const LoginScreen = () => {
                                 null
                         }
                         <View style={styles.input}>
-                          <Icon
-                            name='lock'
-                            type='material-community'
-                            color={Colors.GRAY}
-                          />
-                          <TextInput
-                            onChangeText={handleChange('password')}
-                            onBlur={handleBlur('password')}
-                            placeholder='password'
-                            style={styles.innerInput}
-                            placeholderTextColor={Colors.GRAY}
-                          />
+                            <Icon
+                                name='lock'
+                                type='material-community'
+                                color={Colors.GRAY}
+                            />
+                            <TextInput
+                                onChangeText={handleChange('password')}
+                                onBlur={handleBlur('password')}
+                                placeholder='password'
+                                style={styles.innerInput}
+                                secureTextEntry={!showPassword}
+                                placeholderTextColor={Colors.GRAY}
+                            />
+
+                            <TouchableOpacity onPress={() => {setShowPassword(!showPassword)}}>
+                                <Icon
+                                    name={showPassword? 'eye': 'eye-off'}
+                                    type='material-community'
+                                    color={Colors.GRAY}
+                                />
+                            </TouchableOpacity>
 
                         </View>
                         {
@@ -137,7 +147,7 @@ const LoginScreen = () => {
                             <MediumText textToShow='Or' />
                             <View style={styles.questionContainer}>
                                 <MediumText textToShow="Don't have an account? " />
-                                <TouchableOpacity onPress={() => {navigation.navigate('Register')}}>
+                                <TouchableOpacity onPress={() => { navigation.navigate('Register') }}>
                                     <MediumText textToShow='Register' textCustomStyle={styles.registerText} />
                                 </TouchableOpacity>
                             </View>

@@ -59,6 +59,43 @@ const ProductDetailScreen = () => {
     setProductSizes(updatedSizes)
   }
 
+  const onClickHeart = (productId, currentLikeStatus) => {
+    if (userLoginId != 0) {
+      const product = realm.objects('Product').filtered(`id == ${productId}`)[0]
+      realm.write(() => {
+        product.isLike = !currentLikeStatus
+      })
+
+      getProduct()
+      
+      const favoriteList = realm.objects('FavoriteProduct').filtered(`idUser == ${userLoginId}`)[0]
+      if (favoriteList) {
+        const isProductExist = favoriteList.idProducts.has(productId)
+
+        realm.write(() => {
+          if (isProductExist) {
+            favoriteList.idProducts.delete(productId)
+          } else {
+            favoriteList.idProducts.add(productId)
+          }
+        })
+
+      } else {
+        const newId = generateId('FavoriteProduct')
+
+        realm.write(() => {
+          realm.create('FavoriteProduct', {
+            id: newId,
+            idUser: userLoginId,
+            idProducts: [productId]
+          })
+        })
+      }
+    } else {
+      navigation.navigate('Login')
+    }
+  }
+
   const onClickAddToCart = () => {
     const selectedSize = realm.objects('Size').filtered('isSelected == true')[0];
 
@@ -190,7 +227,7 @@ const ProductDetailScreen = () => {
       </ScrollView>
 
       <View style={productDetailStyles.bottomContainer}>
-        <TouchableOpacity style={productDetailStyles.heartContainer}>
+        <TouchableOpacity style={productDetailStyles.heartContainer} onPress={() => onClickHeart(product.id,product.isLike)}>
           <Icon
             name={product.isLike ? 'heart-circle-sharp' : "heart-circle-outline"}
             type='ionicon'

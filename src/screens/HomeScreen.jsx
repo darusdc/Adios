@@ -22,6 +22,7 @@ import { generateId } from '../utils/generateId'
 import { FavoriteProduct } from '../store/realm/models/FavoriteProduct'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Icon, Image } from '@rneui/themed'
+import ProductList from '../components/ProductList'
 
 
 const renderItem = ({ item }) => (
@@ -39,8 +40,6 @@ const HomeScreen = () => {
   const [products, setProduct] = useState([]);
   const { userLoginId } = useSelector((store) => store.userLoginIdReducer)
   const navigation = useNavigation()
-  const [genders, setGenders] = useState([])
-  const [brands, setBrands] = useState([])
   const [startIndex, setStartIndex] = useState([])
 
   const collectData = () => {
@@ -60,16 +59,6 @@ const HomeScreen = () => {
     return fiveProducts;
   }
 
-  const getGenders = () => {
-    const gendersDB = realm.objects('Gender')
-    setGenders(gendersDB)
-  }
-
-  const getBrands = () => {
-    const brandsDB = realm.objects('Brand')
-    setBrands(brandsDB)
-  }
-
   const listRenderItem = ({ item }) => (
     <Product
       productName={item.name}
@@ -80,14 +69,6 @@ const HomeScreen = () => {
       onPress={() => navigation.navigate('ProductDetail', { id: item.id })}
     />
   )
-
-  const onClickMenu = (basedOnId, basedOnName, basedOnAny) => {
-    navigation.navigate('ProductList', {
-      basedOnId,
-      basedOnName,
-      basedOnAny,
-    });
-  };
 
   const onClickHeart = (productId, currentLikeStatus) => {
     if (userLoginId != 0) {
@@ -135,8 +116,6 @@ const HomeScreen = () => {
     insertDummyData('Shipping', shippingData);
     insertDummyData('Product', productData);
     collectData();
-    getGenders()
-    getBrands()
   }, [])
 
   useFocusEffect(
@@ -178,60 +157,7 @@ const HomeScreen = () => {
           contentContainerStyle={{ padding: 0 }}
           keyExtractor={(item) => item.id}
           renderItem={listRenderItem} />
-
-        <FlatList
-          data={genders}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-          contentContainerStyle={{ padding: 8, paddingTop: 0 }}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={{ margin: 8 }} onPress={() => onClickMenu(item.id, item.genderName, 'Gender')}>
-              <ImageBackground
-                source={{ uri: item.thumbnail }}
-                style={styles.genderImage}
-                imageStyle={{ borderRadius: 5 }}
-              >
-                <View style={styles.genderNameContainer}>
-                  <MediumText
-                    textToShow={item.genderName}
-                    textCustomStyle={styles.genderName}
-                  />
-                  <Icon
-                    name='rightcircle'
-                    type='antdesign'
-                    color={Colors.WHITE}
-                  />
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          )}
-        />
-
-        <MediumText
-          textToShow='BEST BRAND DEALS'
-          textCustomStyle={styles.brandTitle}
-        />
-        <FlatList
-          data={brands}
-          numColumns={3}
-          contentContainerStyle={{ padding: 8 }}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={{ margin: 8 }} onPress={() => onClickMenu(item.id, item.brandName, 'Brand')}>
-              <ImageBackground
-                source={{ uri: item.thumbnail }}
-                style={styles.brandImageBackground}
-                imageStyle={styles.brandImage}
-              >
-                <Image
-                  source={{ uri: item.logo }}
-                  style={styles.brandLogoImage}
-                />
-              </ImageBackground>
-            </TouchableOpacity>
-          )}
-        />
+        <ProductList/>
       </ScrollView>
     </SafeAreaView >
   )
