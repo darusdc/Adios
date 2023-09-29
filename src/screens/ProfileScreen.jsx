@@ -1,4 +1,4 @@
-import { Linking, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Linking, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Header } from '../components/Header/Header'
 import { Image } from '@rneui/base'
@@ -16,10 +16,14 @@ import LottieView from 'lottie-react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { addUserLoginId } from '../store/redux/actions/userLoginIdAction'
 import { addProductCartAmount } from '../store/redux/actions/ProductCartAmountAction'
+import Modal from 'react-native-modal'
+import ImageZoom from 'react-native-image-pan-zoom'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const ProfileScreen = () => {
   const userLoginId = useSelector((store)=> store.userLoginIdReducer.userLoginId)
   const [profile, setProfile] = useState({})
+  const [profileImageShow, setProfileImageShow] = useState(false)
   const logoutRef = useRef(null)
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -51,6 +55,7 @@ const ProfileScreen = () => {
 
   }
 
+
   useFocusEffect(
     useCallback(() => {
       getProfile()
@@ -65,10 +70,14 @@ const ProfileScreen = () => {
       />
       <View style={styles.contentContainer}>
         <View style={styles.profileContainer}>
+          <TouchableOpacity onPress={() => {
+            setProfileImageShow(true)
+          }}>
           <Image
             style={styles.profileImage}
             source={{uri: profile.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png'}}
           />
+          </TouchableOpacity>
           <View style={styles.detailContainer}>
             <MediumText 
               textToShow={`${profile.name}`}
@@ -105,6 +114,16 @@ const ProfileScreen = () => {
             }}
         />
       </View>
+      <Modal isVisible={profileImageShow} onBackButtonPress={() => {setProfileImageShow(false)}} style={{margin: 0, backgroundColor:'black'}}>
+        <ImageZoom 
+        cropWidth={Dimensions.get('window').width} 
+        cropHeight={Dimensions.get('window').height}
+        imageWidth={Dimensions.get('window').width} 
+        imageHeight={Dimensions.get('window').height}
+        >
+          <Image style={{width:"100%",height:"100%"}} source={{uri: profile.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png'}}/>
+        </ImageZoom>
+      </Modal>
       <Portal>
         <Modalize ref={logoutRef} adjustToContentHeight>
           <View style={styles.logoutContentContainer}>

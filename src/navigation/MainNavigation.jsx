@@ -28,6 +28,7 @@ import ProductListScreen from "../screens/ProductListScreen";
 import SearchScreen from "../screens/SearchScreen";
 import SearchResult from "../screens/SearchResultScreen";
 import ChangePasswordScreen from "../screens/ChangePasswordScreen";
+import SplashScreen from "../screens/SplashScreen";
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -156,14 +157,14 @@ const MainNavigation = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home"
+            <Stack.Navigator initialRouteName="Splash"
                 screenOptions={{
                     headerShown: false,
                     cardStyle: {
                         backgroundColor: Colors.WHITE,
                     }
                 }}>
-
+                <Stack.Screen name="Splash" component={SplashScreen} />
                 <Stack.Screen name="TabGroup" component={TabScreenGroup} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Register" component={RegisterScreen} />
