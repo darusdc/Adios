@@ -119,7 +119,7 @@ const ProfileScreen = () => {
         cropWidth={Dimensions.get('window').width} 
         cropHeight={Dimensions.get('window').height}
         imageWidth={Dimensions.get('window').width} 
-        imageHeight={Dimensions.get('window').height}
+        imageHeight={Dimensions.get('window').width}
         >
           <Image style={{width:"100%",height:"100%"}} source={{uri: profile.profileImage || 'https://assets.stickpng.com/thumbs/585e4beacb11b227491c3399.png'}}/>
         </ImageZoom>

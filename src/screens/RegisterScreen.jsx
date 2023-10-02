@@ -182,7 +182,7 @@ const RegisterScreen = () => {
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 placeholder='password'
-                secureTextEntry={showPassword}
+                secureTextEntry={!showPassword}
                 style={styles.innerInput}
                 placeholderTextColor={Colors.GRAY} />
 
@@ -213,7 +213,7 @@ const RegisterScreen = () => {
                 onChangeText={handleChange('passwordConfirmation')}
                 onBlur={handleBlur('passwordConfirmation')}
                 placeholder='password confirmation'
-                secureTextEntry={showPasswordConfirmation}
+                secureTextEntry={!showPasswordConfirmation}
                 style={styles.innerInput}
                 placeholderTextColor={Colors.GRAY} />
               <TouchableOpacity onPress={() => { setShowPasswordConfirmation(!showPasswordConfirmation) }}>
